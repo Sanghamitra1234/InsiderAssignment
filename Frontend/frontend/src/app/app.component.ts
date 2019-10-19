@@ -60,7 +60,7 @@ export class AppComponent {
           this.newImagePaths= data.file.map(addDir);
           
           function addDir(path) {
-            let imgDir="assets/";
+            let imgDir="/assets/";
             return imgDir+path;
           }
           console.log("answer",this.newImagePaths);
