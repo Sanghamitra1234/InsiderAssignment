@@ -1,0 +1,34 @@
+
+<div *ngIf="newImagePaths?.length==0" class="container">
+    <div class="card border-success mt-5">
+        <h1 class="card-header">Upload Image</h1>
+        <div class="card-body">
+            <div class="form-group">
+                <form action="/upload" method="post" enctype="multipart/form-data">
+                    <input  type="file" (change)="selectImage($event)" >
+                    <div *ngIf="noFileError" class="text-danger">{{noFileError}}</div>
+                    <br>
+                    <br>
+                    <img [src]="imgURL" height="200" *ngIf="imgURL">
+                    <br>
+                    <br>
+                    <button class="btn btn-primary" (click)="onSubmit()">Upload</button>
+                    <div *ngIf="errorMessage" class="text-danger">{{errorMessage}}</div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- http://localhost:4200/Backend/src/uploads/Img_panchamhorizontal.png -->
+
+<div *ngIf="newImagePaths?.length>0" class="container">
+        <div class="card-group">
+                <div class="card" *ngFor="let img of newImagePaths">
+                    <img [src]="img"  class="card-img-top" alt="...">
+                </div>
+        </div>
+</div>
+<!-- http://localhost:4200/Backend/src/uploads/Img_panchamhorizontal.png -->
+
+<router-outlet></router-outlet>
