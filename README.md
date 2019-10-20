@@ -1,7 +1,7 @@
 ## InsiderAssignment
 
 #Installation steps (For windows):
-1. Run npm install in both the backend (cd Backend) and frontend folders(	   Going inside the frontend folder of Frontend)
+1. Run npm install in both the backend (cd Backend) and frontend folders(Going inside the frontend folder of Frontend)
 2. Run the bat file
 3. Open the link http://localhost:4200/ in the server.
 

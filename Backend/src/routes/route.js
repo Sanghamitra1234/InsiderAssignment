@@ -8,6 +8,8 @@ const sizeOfImg = require('image-size');
 
 //To crop the images
 const jimp=require('jimp');
+//To store in cloud
+const gc = require('../helpers/google-cloud-storage.js');
 
 const storage = multer.diskStorage({
     destination: (req, file, callBack) => {
@@ -55,7 +57,7 @@ jimp.read(pathOfFile, (err, file) => {
     }
     file
       .crop(134.5,287,755,450) 
-      .write('../../Frontend/frontend/src/assets/'+fileNameArr[0]+'horizontal.'+fileNameArr[1]); 
+      .write('uploads/'+fileNameArr[0]+'horizontal.'+fileNameArr[1]); 
     });
 jimp.read(pathOfFile, (err, file) => {
       if (err){
@@ -63,7 +65,7 @@ jimp.read(pathOfFile, (err, file) => {
        }
       file
         .crop(329.5,287,365,450) 
-        .write('../../Frontend/frontend/src/assets/'+fileNameArr[0]+'vertical.'+fileNameArr[1]); 
+        .write('uploads/'+fileNameArr[0]+'vertical.'+fileNameArr[1]); 
        });
 jimp.read(pathOfFile, (err, file) => {
          if (err){
@@ -72,7 +74,7 @@ jimp.read(pathOfFile, (err, file) => {
          
       file
         .crop(329.5,406,365,212) 
-        .write('../../Frontend/frontend/src/assets/'+fileNameArr[0]+'horizontal_small.'+fileNameArr[1]); 
+        .write('uploads/'+fileNameArr[0]+'horizontal_small.'+fileNameArr[1]); 
  
          });
 jimp.read(pathOfFile, (err, file) => {
@@ -82,17 +84,28 @@ jimp.read(pathOfFile, (err, file) => {
            
       file
         .crop(322,322,380,380) 
-        .write('../../Frontend/frontend/src/assets/'+fileNameArr[0]+'gallery.'+fileNameArr[1]); 
+        .write('uploads/'+fileNameArr[0]+'gallery.'+fileNameArr[1]); 
     });
+
+    gc.copyFileToGCS(pathOfFile,'insider_111').then(data => {
+       gc.copyFileToGCS('uploads/'+fileNameArr[0]+'horizontal.'+fileNameArr[1],'insider_111').then(data1 => {
+          gc.copyFileToGCS('uploads/'+fileNameArr[0]+'vertical.'+fileNameArr[1],'insider_111').then(data2=>{
+            gc.copyFileToGCS('uploads/'+fileNameArr[0]+'horizontal_small.'+fileNameArr[1],'insider_111').then(data3=>{
+              gc.copyFileToGCS('uploads/'+fileNameArr[0]+'gallery.'+fileNameArr[1],'insider_111').then(data4=>{
+                      res.json({"file":[data1,data2,data3,data4]}); 
+              })
+            })
+          })    
+      })
+   }).catch(e => console.log(e));
        
-       res.json({"file":[fileNameArr[0]+'horizontal.'+fileNameArr[1],
-       fileNameArr[0]+'vertical.'+fileNameArr[1],
-       fileNameArr[0]+'horizontal_small.'+fileNameArr[1],
-       fileNameArr[0]+'gallery.'+fileNameArr[1]
-      ]});
+      //  res.json({"file":[fileNameArr[0]+'horizontal.'+fileNameArr[1],
+      //  fileNameArr[0]+'vertical.'+fileNameArr[1],
+      //  fileNameArr[0]+'horizontal_small.'+fileNameArr[1],
+      //  fileNameArr[0]+'gallery.'+fileNameArr[1]
+      // ]});
     }
-      
-})
+  })
 
 
 module.exports=router;

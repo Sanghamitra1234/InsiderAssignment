@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { catchError } from 'rxjs/operators'
 import { HttpClient,HttpErrorResponse } from '@angular/common/http';
 import { AppService } from './app.service';
+import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 
 
 @Component({
@@ -17,8 +18,10 @@ export class AppComponent {
   imgURL: any;
   errorMessage="";
   newImagePaths=[];
+  showSpinner=false;
 
-  constructor(private http:HttpClient,private service:AppService){}
+  constructor(private http:HttpClient,private service:AppService,
+    private spinnerService: Ng4LoadingSpinnerService){}
 
   selectImage(event){
     //console.log(event);
@@ -30,6 +33,7 @@ export class AppComponent {
           //To get the type of file getting uploaded
           if (mimeType.match(/image\/*/) == null) {
             this.noFileError = "Please select image only";
+            this.imgURL=null;
             return;
           }else{
             //To get a preview of the image before upload
@@ -47,6 +51,13 @@ export class AppComponent {
     }
 
     onSubmit(){
+      this.showSpinner=true;
+      if(this.errorMessage==null && this.noFileError==null){
+        this.spinnerService.hide();
+      }
+      if(this.showSpinner){
+        this.spinnerService.show();
+      }
       let formData = new FormData();
       formData.append('image', this.image);
       this.errorMessage="";
@@ -57,13 +68,12 @@ export class AppComponent {
           
         }else{
           //this.newImagePaths=data.file;
-          this.newImagePaths= data.file.map(addDir);
-          
-          function addDir(path) {
-            let imgDir="/assets/";
-            return imgDir+path;
+          this.newImagePaths= data.file;
+          if(this.newImagePaths.length>0){
+            //this.showSpinner=false;
           }
           console.log("answer",this.newImagePaths);
+         // this.router
           
         }
       })

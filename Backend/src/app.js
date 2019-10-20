@@ -11,7 +11,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.use(myRequestLogger);
-//app.use(express.static('public'));
+app.use(express.static('public'));
 app.use('/', router);
 app.use(myErrorLogger);
 

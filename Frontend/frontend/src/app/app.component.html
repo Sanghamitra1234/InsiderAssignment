@@ -20,15 +20,16 @@
     </div>
 </div>
 
-<!-- http://localhost:4200/Backend/src/uploads/Img_panchamhorizontal.png -->
+<ng4-loading-spinner [threshold]="2000" [timeout]="10000"> </ng4-loading-spinner>
 
 <div *ngIf="newImagePaths?.length>0" class="container">
         <div class="card-group">
                 <div class="card" *ngFor="let img of newImagePaths">
                     <img [src]="img"  class="card-img-top" alt="...">
+                    
                 </div>
         </div>
 </div>
-<!-- http://localhost:4200/Backend/src/uploads/Img_panchamhorizontal.png -->
+
 
 <router-outlet></router-outlet>
